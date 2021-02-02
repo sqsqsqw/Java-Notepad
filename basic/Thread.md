@@ -23,7 +23,13 @@ public class MyThread extends Thread{
     }
 } 
 
-//2. 实现Runnable接口
-//3. 实现Callable接口
+/*2. 实现Runnable接口*/
+
+/*3. 实现Callable接口*/
 
 ```
+
+1. 继承Thread类方法：
+- 首先需要继承Thread方法，即 extends Thread 。
+- 然后重写run方法来制作线程体。
+- 想要运行则需要 new MyThread() 后调用 myThread.start() 方法。
