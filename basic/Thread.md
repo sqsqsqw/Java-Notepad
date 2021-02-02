@@ -15,11 +15,21 @@ Process指进程，Thread指线程。
 ```java
 
 /*1. 继承Thread类*/
+
+// 创建
 public class MyThread extends Thread{
     //线程入口点
     @Override
     public void run(){
         //线程体
+    }
+} 
+
+// 运行
+public class Demo {
+    public static void main (String[] args){
+        MyThread myThread = new MyThread();
+        myThread.start();
     }
 } 
 
