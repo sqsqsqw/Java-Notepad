@@ -101,3 +101,53 @@ public class Demo {
 
 继承Thread类方法和实现Runnable接口方法作比较会发现Java有单继承的性质，从而使用Runnable接口方法不会占用父类的位置。
 实现Callable接口方法可以获取返回值，但是获取返回值的函数是阻塞函数，如果进程没有结束则不会继续执行。
+
+## 静态代理
+
+本节主要讲解的是静态代理的设计模式和对于Java的代码实现，
+这里部分的知识点节选自 [常用设计模式有哪些？](https://refactoringguru.cn/design-patterns)
+
+代理分为静态代理和动态代理，静态代理
+
+```java
+public class StaticProxy{
+
+}
+
+interface Marry{
+    void HappyMarry();
+}
+
+//真实角色
+class You impelments Marry{
+    @Override
+    public void HappyMarry(){
+        System.out.println("You进行流程");
+    }
+}
+
+//代理角色
+class WeddingCompany implements Marry{
+
+    private Marry target;
+
+    //构造函数
+    public WeddingCompany (Marry marry){
+        this.target = marry;
+    }
+    @Override
+    public void HappyMarry(){
+        before();
+        System.out.println("WeddingCompany进行流程");
+        after();
+    }
+    public void before(){
+        System.out.println("WeddingCompany流程前");
+    }
+    public void after(){
+        System.out.println("WeddingCompany流程后");
+    }
+}
+
+
+```
