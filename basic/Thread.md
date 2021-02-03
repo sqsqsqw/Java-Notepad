@@ -104,24 +104,40 @@ public class Demo {
 
 ## 静态代理
 
-本节主要讲解的是静态代理的设计模式和对于Java的代码实现，
+本节主要讲解的是静态代理的设计模式和对于Java的代码实现
+
 这里部分的知识点节选自 [常用设计模式有哪些？](https://refactoringguru.cn/design-patterns)
 
-代理分为静态代理和动态代理，静态代理
+代理分为静态代理和动态代理，静态代理.
+
+静态代理规定真实对象和代理对象要实现同一个接口（Marry），代理对象要代理真实角色。
+
+好处：
+- 代理对象可以做很多真实对象做不了的事情（before和after）
+- 真实对象专注做自己的事情
 
 ```java
-public class StaticProxy{
+/** 假设某一家婚庆公司要代理你自己进行婚礼前后的准备，并让你参加婚礼
+  * 此时你自己属于真实对象，而婚庆公司则属于代理对象
+  * 代理对象需要完成婚礼前准备工作和婚礼后的收尾工作
+  * 而真实对象只需要参加婚礼
+  */
 
+public class StaticProxy{
+    public static void main(String[] args){
+        WeddingCompany weddingCompany = new WeddingCompany(new You());
+        weddingCompany.happyMarry();
+    }
 }
 
 interface Marry{
-    void HappyMarry();
+    void happyMarry();
 }
 
 //真实角色
 class You impelments Marry{
     @Override
-    public void HappyMarry(){
+    public void happyMarry(){
         System.out.println("You进行流程");
     }
 }
@@ -135,10 +151,11 @@ class WeddingCompany implements Marry{
     public WeddingCompany (Marry marry){
         this.target = marry;
     }
+
     @Override
-    public void HappyMarry(){
+    public void happyMarry(){
         before();
-        System.out.println("WeddingCompany进行流程");
+        this.target.happyMarry();   //代理运行真实对象的方法
         after();
     }
     public void before(){
@@ -148,6 +165,5 @@ class WeddingCompany implements Marry{
         System.out.println("WeddingCompany流程后");
     }
 }
-
 
 ```
