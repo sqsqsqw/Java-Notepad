@@ -167,3 +167,26 @@ class WeddingCompany implements Marry{
 }
 
 ```
+
+## 进程的五大状态
+
+- 创建状态
+- 就绪状态
+- 阻塞状态
+- 运行状态
+- 死亡状态
+
+```mermaid
+graph LR
+A[创建状态]
+B[就绪状态]
+C[阻塞状态]
+D[运行状态]
+E[死亡状态]
+A-->B
+B-->D
+D-->C
+C-->B
+D-->E
+```
+👆这个地方如果显示的不是树图去安装 [Github + mermaid](https://github.com/BackMarket/github-mermaid-extension)
