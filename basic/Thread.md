@@ -168,7 +168,9 @@ class WeddingCompany implements Marry{
 
 ```
 
-## 进程的五大状态
+## 进程的状态
+
+### 进程五大状态
 
 - 创建状态
 - 就绪状态
@@ -189,7 +191,10 @@ D-->C
 C-->B
 D-->E
 ```
-👆这个地方如果显示的不是树图去安装 [Github + mermaid](https://github.com/BackMarket/github-mermaid-extension)
+👆这个地方如果显示的不是图或者没有显示图请安装 [Github + mermaid](https://github.com/BackMarket/github-mermaid-extension)
+
+###线程的基础方法
+ 
 
 | 方法 | 说明 |
 | ---- | ---- |
@@ -199,3 +204,7 @@ D-->E
 | static void yield()  | 暂停当前正在执行的线程对象并执行其他线程 |
 | void interrupt()  | (不建议使用)中断线程 |
 | boolean isAlive()  | 测试线程是否处于活动状态 |
+
+### 停止进程
+
+停止进程尽量不要使用JDK提供的stop()方法和destory()方法
