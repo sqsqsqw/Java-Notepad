@@ -89,15 +89,15 @@ public class Demo {
 1. 继承Thread类方法：
 - 首先需要继承Thread类，即 extends Thread 。
 - 然后重写run方法来制作线程体。
-- 想要运行则需要 new MyThread() 后调用 myThread.start() 方法。
+- 想要运行则需要 `new MyThread()` 后调用 `myThread.start()` 方法。
 
 2. 实现Runnable接口方法:
 - 首先需要实现Runnable接口，即 implements Runnable 。
 - 然后重新run方法制作线程体。
-- 运行则需要实现Thread时将Runnable的实现类作为参数放入到构造函数中，并运行start()方法。
+- 运行则需要实现Thread时将Runnable的实现类作为参数放入到构造函数中，并运行 `start()` 方法。
 
 3. 实现Callable接口方法:
-- 首先需要实现Callable<T>，T为范类，代表返回值的类型。
+- 首先需要实现 `Callable<T>` ，T为范类，代表返回值的类型。
 - 然后重写返回类型为T的call方法。
 - 运行方法需要创建服务，并提交callable实现类，通过get方法获取返回值。记得最终要关闭服务。
 
@@ -251,7 +251,7 @@ thread.start();
 
 ### 1.5.2 停止进程
 
-停止进程尽量不要使用JDK提供的stop()方法和destory()方法
+停止进程尽量不要使用JDK提供的 `stop()` 方法和 `destory()` 方法
 
 ```java
 class TestStop implements Runnable {
@@ -288,7 +288,7 @@ class TestStop implements Runnable {
 ### 1.5.3 进程休眠
 
 sleep方法使进行阻塞设置的时间，并再次返回到就绪状态等待分配资源。sleep方法存在InterruptedException异常。
-休眠方法的用法为：sleep(毫秒数)
+休眠方法的用法为：`sleep(毫秒数)`
 
 ### 1.5.4 线程礼让
 
@@ -327,9 +327,9 @@ public class TestJoin implements Runnable {
 
 ### 1.5.6 线程内获取线程信息
 
-Thread.currentThread() //获取当前进程的对象
-Thread.currentThread().getName() //获取名字
-Thread.currentThread().getPriority() //获取优先级
+ `Thread.currentThread()` 获取当前进程的对象
+ `Thread.currentThread().getName()`  获取名字
+ `Thread.currentThread().getPriority()`  获取优先级
 
 
 ## 1.6 线程优先级
@@ -344,7 +344,7 @@ Java提供一个线程调度器来监控程序中启动后进入就绪状态的�
 
 使用下面方式更改优先级
 
-- getPriority().setPriority(int XXX);
+- `getPriority().setPriority(int XXX);`
 
 优先级高的并不一定会优先运行。优先级高的优先运行的概率会变高。
 
@@ -385,7 +385,7 @@ class Human implements Runnable {
 
 需要注意：
 
-- thread.setDaemon(true)必须在thread.start()之前设置，否则会跑出一个IllegalThreadStateException异常。你不能把正在运行的常规线程设置为守护线程
+- `thread.setDaemon(true)` 必须在 `thread.start()` 之前设置，否则会跑出一个IllegalThreadStateException异常。你不能把正在运行的常规线程设置为守护线程
 - 在Daemon线程中产生的新线程也是Daemon的
 - 守护线程不能用于去访问固有资源，比如读写操作或者计算逻辑。因为它会在任何时候甚至在一个操作的中间发生中断。
 - Java自带的多线程框架，比如ExecutorService，会将守护线程转换为用户线程，所以如果要使用后台线程就不能用Java的线程池。
@@ -547,7 +547,7 @@ class Makeup extends Thread{
 
 Lock同步锁在JDK1.5之后出现，使得实现同步锁更加的灵活(Lock显式锁)。
 
-Lock需要通过lock()方法上锁，通过unlock()方法释放锁。为了保证锁能释放，所有unlock方法一般放在finally中去执行。
+Lock需要通过 `lock()` 方法上锁，通过 `unlock()` 方法释放锁。为了保证锁能释放，所有unlock方法一般放在finally中去执行。
 
 Lock类同样也是JUC包下的工具类。
 
@@ -773,7 +773,7 @@ class Clerk{
 
 ## 1.10 线程池
 
-JDK5.0提供了线程池相关的API：ExecutorService和Executors，这两个类在callable的实现中使用过。
+JDK5.0提供了线程池相关的API：`ExecutorService` 和 `Executors` ，这两个类在callable的实现中使用过。
 
 线程池可以避免现成的频繁创建和销毁，使用完后可以放回线程池中，大大提高响应速度。
 
@@ -803,4 +803,4 @@ public class Demo {
 } 
 ```
 
-在Callable方法中存在返回值的方法是submit()，execute()方法是没有返回值的。
+在Callable方法中存在返回值的方法是 `submit()`, `execute()` 方法是没有返回值的。
