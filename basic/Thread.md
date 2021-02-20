@@ -1,3 +1,5 @@
+[TOC]
+
 # 1 Java 多线程
 
 ## 1.1 Process 和 Thread
@@ -390,6 +392,8 @@ class Human implements Runnable {
 
 ## 1.8 线程同步
 
+### 1.8.1 线程同步
+
 当多个线程操作同一个资源的时候会出现线程并发问题。即多个线程可能会同时修改同一个资源，这个时候就需要线程同步，线程同步其实是一种等待机制，需要形成队列等待前面线程使用完毕，下一个线程再使用。
 
 线程同步的形成条件为： 队列 + 锁 （解决线程安全性） synchronized
@@ -412,6 +416,7 @@ public class UnSafeList {
             }).start();
         }   
 
+        Thread.sleep(3000);
         sout(list.size);
     }
 }
@@ -419,25 +424,9 @@ public class UnSafeList {
 ```
 
 安全列表
-
-```java
-public class SafeList {
-    public static void main(String[] args) {
-        synchronized List<String> list = new ArrayList<String>();
-        
-        for(int i = 0; i < 10000; i++){
-            new Thread(() -> {              //lambda表达式
-                list.add(Thread.currentThread().getName());
-            }).start();
-        }   
-
-        sout(list.size);
-    }
-}
-
-```
-
-同步块
+synchronized可以修饰方法，类和代码块
+修饰方法时实际上是锁上了方法的所属对象
+修饰代码块的部分又称作同步块
 
 ```java
 public class SafeList {
@@ -452,8 +441,366 @@ public class SafeList {
             }).start();
         }   
 
+        Thread.sleep(3000);
         sout(list.size);
     }
 }
 
 ```
+
+### 1.8.2 JUC简介
+
+JUC是 java.util.concurrent 工具包的简称，这是一个处理线程的工具包，JDK 1.5开始出现的。
+
+先简单举个例子
+
+```java
+import java.util.concurrent.*;
+
+public class TestJUC {
+    public static void main(String[] args) {
+        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<String>();
+
+        for(int i = 0; i < 10000; i++){
+            new Thread(() -> {
+                list.add(Thread.currentThread().getName());
+            }).start();
+        }
+
+        Thread.sleep(3000);
+        sout(list.size);
+    }
+}
+```
+
+在上面程序中使用到了java.util.concurrent.CopyOnWriteArrayList这个类，他是写数组的拷贝，支持高效率并发且是线程安全的,读操作无锁的ArrayList。所有可变操作都是通过对底层数组进行一次新的复制来实现。
+
+### 1.8.3 死锁
+
+多个线程各自占有一些共享资源，并互相等待其他线程占有的资源才会运行，从而导致多个线程都在等待其他线程释放资源，最终停止执行的情况。
+
+```java
+public class DeadLock {
+    Makeup girl1 = new Makeup(0, "girl1");
+    Makeup girl2 = new Makeup(1, "girl2");
+
+    girl1.start();
+    girl2.start();
+}
+
+class Lipstick{
+
+}
+
+class Mirror{
+    
+}
+
+class Makeup extends Thread{
+    static Lipstick lipstick = new Lipstick();
+    static Mirror mirror = new Mirror();
+
+    int choice;
+    String girlName;
+
+    public Makeup(int choice, String girlName){
+        this.choice = choice;
+        this.girlName = girlName;
+    }
+
+    @Override
+    public void run() {
+        makeup();
+    }
+
+    private void makeup() {
+        if(choice == 0) {
+            synchronized(lipstick) {
+                Thread.sleep(1000);
+                synchronized(mirror) {
+                    Thread.sleep(1000);
+                }
+            }
+        }
+        else {
+            synchronized(mirror) {
+                Thread.sleep(1000);
+                synchronized(lipstick) {
+                    Thread.sleep(1000);
+                }
+            }
+        }
+    }
+}
+
+```
+
+
+产生死锁的四个必要的条件：
+
+- 互斥条件： 一个资源每次最多只能被n-1个进程使用
+- 请求与保持条件： 一个进程因请求资源而阻塞时对已获得的资源保持不放
+- 不剥夺条件： 进程已获得的资源，在未使用完之前，不能强行剥夺。
+- 循环等待条件：若干个进程之间形成一种头尾相接的循环等待资源关系。
+
+### 1.8.4 Lock
+
+Lock同步锁在JDK1.5之后出现，使得实现同步锁更加的灵活(Lock显式锁)。
+
+Lock需要通过lock()方法上锁，通过unlock()方法释放锁。为了保证锁能释放，所有unlock方法一般放在finally中去执行。
+
+Lock类同样也是JUC包下的工具类。
+
+```java
+public class TestLock {
+    public static void main(String[] args) {
+        Ticket td = new Ticket();
+        new Thread(td, "窗口1").start();
+        new Thread(td, "窗口2").start();
+        new Thread(td, "窗口3").start();
+    }
+}
+
+class Ticket implements Runnable {
+    private Lock lock = new ReentrantLock();//创建lock锁
+    private int ticket = 100;
+    @Override
+    public void run() {
+        while (true) {
+            lock.lock();//上锁
+            try {
+                if (ticket > 0) {
+                    try {
+                        Thread.sleep(200);
+                    } catch (Exception e) {
+                    }
+                    System.out.println(Thread.currentThread().getName() + "完成售票，余票为：" + (--ticket));
+                }
+            }finally {
+                lock.unlock();//释放锁
+            }
+
+        }
+    }
+}
+```
+
+值得注意的是，在1.8.2章节中使用过的CopyOnWriteArrayList类中也是使用ReentrantLock（Lock的实现类）锁进行同步操作。
+
+### 1.8.5 JUC基础
+
+摘抄自 [JUC-简书](https://www.jianshu.com/p/1f19835e05c0)
+
+先来看看下面的一段代码：
+```java
+public class TestVolatile {
+    public static void main(String[] args){ //这个线程是用来读取flag的值的
+        ThreadDemo threadDemo = new ThreadDemo();
+        Thread thread = new Thread(threadDemo);
+        thread.start();
+        while (true){
+            if (threadDemo.isFlag()){
+                System.out.println("主线程读取到的flag = " + threadDemo.isFlag());
+                break;
+            }
+        }
+    }
+}
+
+@Data
+class ThreadDemo implements Runnable{ //这个线程是用来修改flag的值的
+    public  boolean flag = false;
+    @Override
+    public void run() {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        flag = true;
+        System.out.println("ThreadDemo线程修改后的flag = " + isFlag());
+    }
+}
+```
+
+这段代码很简单，就是一个ThreadDemo类继承Runnable创建一个线程。它有一个成员变量flag为false，然后重写run方法，在run方法里面将flag改为true，同时还有一条输出语句。然后就是main方法主线程去读取flag。如果flag为true，就会break掉while循环，否则就是死循环。按道理，下面那个线程将flag改为true了，主线程读取到的应该也是true，循环应该会结束。
+
+但是程序并没有结束，也就是死循环。说明主线程读取到的flag还是false，可是另一个线程明明将flag改为true了，而且打印出来了，这是什么原因呢？这就是内存可见性问题。
+
+    内存可见性问题：当多个线程操作共享数据时，彼此不可见。
+
+```java
+while (true){
+        synchronized (threadDemo){
+            if (threadDemo.isFlag()){
+                System.out.println("主线程读取到的flag = " + threadDemo.isFlag());
+                break;
+            }
+        }
+ }
+```
+
+使用 synchronized 代码块确实可以解决这个问题，但是一加锁，每次只能有一个线程访问，当一个线程持有锁时，其他的就会阻塞，效率就非常低了。不想加锁，又要解决内存可见性问题，那么就可以使用volatile关键字。
+
+volatile 保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。（实现可见性）
+
+volatile关键字：当多个线程操作共享数据时，可以保证内存中的数据可见。用这个关键字修饰共享数据，就会及时的把线程缓存中的数据刷新到主存中去，也可以理解为，就是直接操作主存中的数据。所以在不使用锁的情况下，可以使用volatile。
+
+```java
+public  volatile boolean flag = false;
+```
+
+volatile和synchronized的区别在于volatile不具备互斥性和原子性。
+
+对于解决原子性的相关问题，在JDK 1.5之后，Java提供了原子变量，在java.util.concurrent.atomic包下。原子变量具备如下特点：
+
+- 有volatile保证内存可见性。
+- 用CAS算法保证原子性。（CAS算法自行查询）
+
+```java
+ //private int i = 0;
+ AtomicInteger i = new AtomicInteger();
+ public int getI(){
+     return i.getAndIncrement();
+ }
+```
+
+## 1.9 线程协作
+
+### 1.9.1 生产者消费者模式
+
+生产者生产产品，消费者消费产品，如果生产者达到了存货上线，则不会再生产，消费者如果没有货物，同样也不需要消费。
+
+在这个问题中，生产者和消费者共享同一个资源，并且两个线程之间相互依赖，互为条件
+
+```java
+public class TestProductorAndconsumer {
+    public static void main(String[] args){
+           Clerk clerk = new Clerk();
+           Productor productor = new Productor(clerk);
+           Consumer consumer = new Consumer(clerk);
+           new Thread(productor,"生产者A").start();
+           new Thread(consumer,"消费者B").start();
+    }
+}
+//店员
+class Clerk{
+    private int product = 0;//共享数据
+    public synchronized void get(){ //进货
+        if(product >= 10){
+            System.out.println("产品已满");
+        }else {
+            System.out.println(Thread.currentThread().getName()+":"+ (++product));
+        }
+    }
+    public synchronized void sell(){//卖货
+        if (product <= 0){
+            System.out.println("缺货");
+        }else {
+            System.out.println(Thread.currentThread().getName()+":"+ (--product));
+        }
+    }
+}
+//生产者
+class Productor implements Runnable{
+    private Clerk clerk;
+    public Productor(Clerk clerk){
+        this.clerk = clerk;
+    }
+    @Override
+    public void run() {
+        for (int i = 0;i<20;i++){
+            clerk.get();
+        }
+    }
+}
+//消费者
+class Consumer implements Runnable{
+    private Clerk clerk;
+    public Consumer(Clerk clerk){
+        this.clerk = clerk;
+    }
+    @Override
+    public void run() {
+        for (int i = 0;i<20;i++){
+            clerk.sell();
+        }
+    }
+}
+```
+
+在店员Clerk中存在进货方法和卖货方法，同时生产者和消费者调用这两个方法进行各自的运动。但是当没有货物的时候消费者会一直提出缺货的信息，这样会浪费资源，这种时候可以通过线程唤醒和等待的机制进行处理，让消费者在缺少货物的时候进行等待，并让生产者在生产时唤醒消费者。
+
+在这种问题中，只有synchronized修饰时不够的，因为synchronized不能用来实现不同线程之间的信息传递。
+
+在Object类里有几个方法，分别是 wait() , wait(int timeout) , notify() 和 notifyAll()。这四个方法都只能在同步方法或者同步代码块中使用，否则会抛出异常。
+
+```java
+//管程法
+//店员
+class Clerk{
+    private int product = 0;//共享数据
+    public synchronized void get(){ //进货
+        if(product >= 10){
+            System.out.println("产品已满");
+            try {
+                this.wait();//满了就等待
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else {
+            System.out.println(Thread.currentThread().getName()+":"+ (++product));
+            this.notifyAll();//没满就可以进货
+        }
+    }
+    public synchronized void sell(){//卖货
+        if (product <= 0){
+            System.out.println("缺货");
+            try {
+                this.wait();//缺货就等待
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else {
+            System.out.println(Thread.currentThread().getName()+":"+ (--product));
+            this.notifyAll();//不缺货就可以卖
+        }
+    }
+}
+```
+
+上述程序仍会出现一些小问题，但是因为是探讨线程协作的用法，故不赘述，具体可查看[JUC-简书](https://www.jianshu.com/p/1f19835e05c0)
+
+## 1.10 线程池
+
+JDK5.0提供了线程池相关的API：ExecutorService和Executors，这两个类在callable的实现中使用过。
+
+线程池可以避免现成的频繁创建和销毁，使用完后可以放回线程池中，大大提高响应速度。
+
+```java
+public class MyRunnable implements Runnable{
+    //线程入口点
+    @Override
+    public void run(){
+        //线程体
+    }
+}
+
+// 运行
+public class Demo {
+    public static void main (String[] args){        
+        //创建执行服务
+        ExecutorService ser = Executors.newFixedThreadPool(10);//参数代表有几个线程
+
+        //提交执行
+        ser.execute(new MyRunnable());
+        ser.execute(new MyRunnable());
+        ser.execute(new MyRunnable());
+
+        //关闭服务
+        ser.shutdownNow();
+    }
+} 
+```
+
+在Callable方法中存在返回值的方法是submit()，execute()方法是没有返回值的。
