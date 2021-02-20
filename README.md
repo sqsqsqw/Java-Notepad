@@ -8,5 +8,5 @@
 
 1. [Java 多线程](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Thread.md)
 2. [Java 反射](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Reflection.md)
-3. [Impala SQL基础]()
-4. [金融知识]()
+3. [Impala SQL基础](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Impala.md)
+4. [金融知识](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/FinanceBusiness.md)
