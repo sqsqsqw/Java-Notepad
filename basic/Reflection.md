@@ -18,6 +18,7 @@ Annotation 从JDK5.0开始引入的新技术
 
 其中 `@SuppressWarnings` 注解是需要添加一个参数才可以使用，参数包括
 
+> ---
 >  一个参数的语法 @SuppressWarnings("all")，
 >  多个参数的语法 @SuppressWarnings(value={"all","path"})
 >
@@ -28,3 +29,13 @@ Annotation 从JDK5.0开始引入的新技术
 > - serial:可序列化类上缺少serialVerisonUID定义时的警告
 > - finally:任何finally橘子不能完成时的警告
 > - all：以上所有情况的警告。
+> ---
+
+### 2.1.3 元注解
+
+元注解的作用就是负责 __注解其他的注解__ ，Java一共定义了四个标准的元注解类型
+
+- `@Target` : 用于描述注解的适用范围
+- `@Retention` : 表示需要在什么级别保存该注释信息，用于描述注解的生命周期 （SOURCE < CLASS < RUNTIME）
+- `@Document` : 说明该注解将被包含在 javadoc 中
+- `@Inherited` : 说明子类可以继承父类中的该注解
