@@ -124,3 +124,82 @@ Reflection（反射）是Java被视作 __动态语言__ 的关键，反射机制
 - `java.lang.reflect.Method` 
 - `java.lang.reflect.Field` 
 - `java.lang.reflect.Constructor` 
+
+### 2.2.3  反射示例
+
+```java
+package com.test;
+
+public class TestReflect1 {
+    public static void main(String[] args) {
+        Class c1 = Class.forName("com.test.User");
+        sout(c1); //输出：class com.test.User
+        
+        Class c2 = Class.forName("com.test.User");
+        Class c3 = Class.forName("com.test.User");
+        Class c4 = Class.forName("com.test.User");
+
+        //一个类在内存中只有一个Class对象，一个类被加载后类的整个类的结构都被封装在Class对象中
+        sout(c2.hashCode());
+        sout(c3.hashCode());
+        sout(c4.hashCode());
+    }
+
+}
+
+class User{
+    private String name;
+    private int id;
+    private int age;
+
+    public User(String name, int id, int age){
+        ...
+    }
+
+    getter...
+    setter...
+
+}
+```
+
+## 2.3 Class类
+
+对象得到的信息：某个类的属性， 方法和构造器，某个类到底实现了哪些接口。对于每个类而言，JRE都为其保留了一个不变的Class类型的对象。一个Class对象包含了特定某个结构的基本信息。
+
+- Class本身也是一个类
+- Class对象只能由系统建立
+- 一个加载的类在JVM中只能有一个Class实例
+- 一个Class对象对应的是一个加载到JVM的一个.class文件
+- 每个类的实例都会记得自己是由哪个Class实例生成的
+- 通过Class可以完整的得到一个类中所有被加载的结构
+- Class类是Reflection的根源，针对任何你想动态加载，运行的类，唯有现获得相应的Class对象
+
+### 2.3.1 Class的常用方法
+
+| 方法名 | 功能说明 |
+| ---- | ---- |
+| getName() | 返回String形式的该类的名称。 | 
+| newInstance() | 根据某个Class对象产生其对应类的实例，它调用的是此类的默认构造方法(没有默认无参构造器会报错) | 
+| getClassLoader() | 返回该Class对象对应的类的类加载器。 | 
+| getSuperClass() | 返回某子类所对应的直接父类所对应的Class对象 | 
+| isArray() | 判定此Class对象所对应的是否是一个数组对象 | 
+| getComponentType()  | 如果当前类表示一个数组，则返回表示该数组组件的 Class 对象，否则返回 null。 | 
+| getConstructor(Class[])  | 返回当前 Class 对象表示的类的指定的公有构造子对象。 | 
+| getConstructors()  | 返回当前 Class 对象表示的类的所有公有构造子对象数组。 | 
+| getDeclaredConstructor(Class[])  | 返回当前 Class 对象表示的类的指定已说明的一个构造子对象。 | 
+| getDeclaredConstructors()  | 返回当前 Class 对象表示的类的所有已说明的构造子对象数组。 | 
+| getDeclaredField(String)  | 返回当前 Class 对象表示的类或接口的指定已说明的一个域对象。 | 
+| getDeclaredFields()  | 返回当前 Class 对象表示的类或接口的所有已说明的域对象数组。 | 
+| getDeclaredMethod(String, Class[])  | 返回当前 Class 对象表示的类或接口的指定已说明的一个方法对象。 | 
+| getDeclaredMethods()  | 返回 Class 对象表示的类或接口的所有已说明的方法数组。 | 
+| getField(String)  | 返回当前 Class 对象表示的类或接口的指定的公有成员域对象。 | 
+| getFields()  | 返回当前 Class 对象表示的类或接口的所有可访问的公有域对象数组。 | 
+| getInterfaces()  | 返回当前对象表示的类或接口实现的接口。 | 
+| getMethod(String, Class[])  | 返回当前 Class 对象表示的类或接口的指定的公有成员方法对象。 | 
+| getMethods()  | 返回当前 Class 对象表示的类或接口的所有公有成员方法对象数组，包括已声明的和从父类继承的方法。 | 
+| isInstance(Object)  | 此方法是 Java 语言 instanceof 操作的动态等价方法。 | 
+| isInterface()  | 判定指定的 Class 对象是否表示一个接口类型 | 
+| isPrimitive()  | 判定指定的 Class 对象是否表示一个 Java 的基类型。 | 
+| newInstance()  | 创建类的新实例 | 
+
+### 2.3.2 获取Class类实例的三种方法
