@@ -56,7 +56,7 @@ reboot
 ```
 以上两个步骤是为了service和agent连接不会受到selinux和防火墙的影响。
 
-### 1.3.4 yum设置不删除资源包
+### 1.3.4 yum设置不删除资源包（三台）
 
 ```shell 
 vi /etc/yum.conf 
@@ -66,7 +66,7 @@ keepcache=1
 
 这个操作是为了获得rpm包并提供给其他主机使用，如果本身有cloudera相关资源包可以忽略下一个步骤
 
-## 1.3.5 获取需要的资源包
+### 1.3.5 获取需要的资源包
 
 接下来的步骤需要获取以下资源包：
 
@@ -83,11 +83,11 @@ yum install cloudera-manager-agent -y
 
 安装完毕后资源包将会在 /var/cache/yum/x86_64/7/cloudera-manager/package 中找到，将下载后的包进行备份，并获取全部需要的包即可。
 
-## 1.3.6 将资源安装在其他主机上
+### 1.3.6 将资源安装在其他主机上
 
 获取到资源包后即可把资源包放置在 /var/cache/yum/x86_64/7/cloudera-manager/package 同一位置中，yum在安装前会优先扫描这个文件夹下面的资源包，如果存在则直接跳过下载流程。这样所有的安装流程就完成了。
 
-## 1.3.7 cloudera官网上获取安装脚本并运行
+### 1.3.7 cloudera官网上获取安装脚本并运行
 
 上面几个步骤是为了在安装时减少下载的时间而提前安装资源，接下来去官网上寻找 [CDP私有云](https://www.cloudera.com/downloads/cdp-private-cloud-trial.html.html) 的体验资格，并按照接下来的流程在service上进行安装。
 
@@ -100,7 +100,7 @@ sudo ./cloudera-manager-installer.bin
 
 安装后就可以通过 http://192.168.222.129:7180/ 访问网页的控制台，并添加新的集群。
 
-## 1.3.8 按照流程进行安装
+### 1.3.8 按照流程进行安装
 
 1. 进入集群安装界面，进入到欢迎流程，点击继续
 2. 设置集群名称并设置集群类型
