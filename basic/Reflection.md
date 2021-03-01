@@ -203,3 +203,21 @@ class User{
 | newInstance()  | 创建类的新实例 | 
 
 ### 2.3.2 获取Class类实例的三种方法
+
+1. 若已知具体的类，通过类的class属性获取，该方法安全可靠，性能最高
+
+```java
+Class clazz = Person.class;
+```
+
+2. 已知某个类的实例，调用该实例的 `getClass()` 方法获取Class对象
+
+```java
+Class clazz = person.getClass();
+```
+
+3. 已知某个类的全类名，且该类在类路径下，可以通过Class类的静态方法 `forName()` 获取
+
+```java
+Class clazz = CLass.forName("com.demo.Person");
+```
