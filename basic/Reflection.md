@@ -202,7 +202,7 @@ class User{
 | isPrimitive()  | 判定指定的 Class 对象是否表示一个 Java 的基类型。 | 
 | newInstance()  | 创建类的新实例 | 
 
-### 2.3.2 获取Class类实例的三种方法
+### 2.3.2 获取Class类实例的方法
 
 1. 若已知具体的类，通过类的class属性获取，该方法安全可靠，性能最高
 
@@ -220,4 +220,36 @@ Class clazz = person.getClass();
 
 ```java
 Class clazz = CLass.forName("com.demo.Person");
+```
+
+4. 基本内置类型的包装类都有一个Type属性
+
+```java
+Class clazz = Integer.TYPE;
+```
+
+同样，可以通过一下方法获取Class对应父类的方法
+
+```java
+Class clazz = student.getSuperclass();
+``` 
+
+### 2.3.3 Class对象都存在于哪
+
+- class：外部类，成员（成员内部类，静态内部类），局部内部类，匿名内部类
+- interface：接口
+- []：数组
+- enum：枚举
+- annotation：注解@interface
+- primitive type：基本数据类型
+- void 
+
+其中，值得注意的是，数组的长度不同时，获取到的Class实例也是相同的,但是数组维度不同就不是相同的Class实例
+
+```java
+int[] a = new int[10];
+int[] b = new int[100];
+
+sout(a.getClass().hashCode());
+sout(b.getClass().hashCode());
 ```
