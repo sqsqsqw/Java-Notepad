@@ -13,9 +13,9 @@ __本笔记内的所有文章并非权威__
 - [Impala SQL基础](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Impala.md) （完结）
 - [金融知识](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/FinanceBusiness.md)
 
-[第二部分 分布式大数据](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute) （可能弃用）
+[第二部分 分布式大数据](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute)
 
-- [CDH](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute/CDH)
+- [CDH](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute/CDH) （可能弃用）
     - [环境搭建](https://github.com/sqsqsqw/Java-Notepad/blob/master/distribute/CDH/build.md)
 
 [第三部分 框架](https://github.com/sqsqsqw/Java-Notepad/tree/master/framework)
