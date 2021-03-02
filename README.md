@@ -6,9 +6,14 @@ __本笔记内的所有文章并非权威__
 
 ### 目录
 
-第一部分 基础
+[第一部分 基础](https://github.com/sqsqsqw/Java-Notepad/tree/master/basic)
 
-1. [Java 多线程](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Thread.md)
-2. [Java 反射](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Reflection.md)
-3. [Impala SQL基础](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Impala.md)
-4. [金融知识](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/FinanceBusiness.md)
+- [Java 多线程](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Thread.md)
+- [Java 反射](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Reflection.md)
+- [Impala SQL基础](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Impala.md)
+- [金融知识](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/FinanceBusiness.md)
+
+[第二部分 分布式大数据](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute)
+
+- [CDH](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute/CDH)
+    - [环境搭建](https://github.com/sqsqsqw/Java-Notepad/blob/master/distribute/CDH/build.md)
