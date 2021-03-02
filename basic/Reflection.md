@@ -312,3 +312,36 @@ __类的初始化__：JVM负责对类进行初始化。时执行类构造器 `<c
 - 当访问一个静态域时，只有真正生命这个域的类才会被初始化。如：当通过子类引用父类的静态变量，不会导致子类初始化
 - 通过数组定义类引用，不会触发此类的初始化
 - 引用常量不会触发此类的初始化
+
+```java
+// 可以猜猜最后会输出什么
+public class Demo2 {
+    public static void main(String[] args) {
+        System.out.println(Student.name);
+    }
+}
+
+
+class Person {
+    static {
+        System.out.println("Person.static");
+    }
+
+    public Person() {
+        System.out.println("Person.Constructor");
+    }
+
+    static String name = "aaa";
+}
+
+class Student extends Person {
+    static {
+        System.out.println("Student.static");
+    }
+
+    public Student() {
+        System.out.println("Student.Constructor");
+    }
+
+}
+```
