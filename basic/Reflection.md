@@ -345,3 +345,26 @@ class Student extends Person {
 
 }
 ```
+
+### 2.4.3 类加载器的作用
+
+类加载的作用：将class文件字节码内容加载到内存中，并将这些静态数据转换秤方法区的运行时数据结构。然后创建生成一个代表这个类的 `java.lang.Class` 对象。
+
+类缓存：标准的JavaSE类加载器可以按照要求查找类，一旦某个类被加载到类加载器中，他将维持加载一段时间，不过JVM垃圾回收机制可以回收这些Class对象。
+
+## 2.5 创建运行时类的对象
+
+### 2.5.1 通过反射获取运行时完整的对象
+
+```java
+
+public class Demo3 {
+    public static void main(String[] args) throws ClassNotFoundException {
+        Class c1 = Class.forName("com.User");
+
+        sout(c1.getName());         //com.User
+        sout(c1.getSimpleName());   //User
+    }
+}
+
+```
