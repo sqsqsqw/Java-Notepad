@@ -357,7 +357,6 @@ class Student extends Person {
 ### 2.5.1 通过反射获取运行时完整的对象
 
 ```java
-
 package com;
 
 import java.lang.reflect.Field;
@@ -376,7 +375,12 @@ public class Demo2 {
                 System.out.println(f);
             }
 
-            System.out.println(fs[0].get(new Student()));
+            //直接获取对象中测属性值
+            fs[0].setAccessible(true);//如果想获取或者设置private修饰的属性，请先运行这行代码关闭权限检测
+            Student s = new Student();
+            System.out.println(fs[0].get(s));
+            fs[0].set(s, "s");
+            System.out.println(fs[0].get(s));
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -410,6 +414,7 @@ static java.lang.String com.Student.name3
 private java.lang.String com.Student.addr
 public java.lang.String com.Student.tel
 name3333
+s
 */
 
 ```
