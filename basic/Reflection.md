@@ -639,3 +639,106 @@ public class Demo2 {
 ```
 
 ## 2.7 反射操作注解
+
+ORM: Object Relationship Mapping 对象映射关系
+
+类和表结构队形，属性和字段对应，对象和记录对应
+
+解决方法就用到了反射获取注解的值并操作数据库
+```java
+package com;
+
+import java.lang.annotation.*;
+
+public class ORM {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchFieldException {
+        Class<?> clazz = Class.forName("com.Student");
+
+        //通过反射获得注解
+        Annotation[] annotations = clazz.getAnnotations();
+        for (Annotation annotation : annotations) {
+            System.out.println(annotation);
+        }
+
+        //获得注解value的值
+        TableMapping annotation = (TableMapping) clazz.getAnnotation(TableMapping.class);
+        String val = annotation.value();
+        System.out.println(val);
+
+        //获得类指定的注解
+
+        FieldMapping name = clazz.getDeclaredField("name").getAnnotation(FieldMapping.class);
+        System.out.println(name.columnName());
+        System.out.println(name.type());
+        System.out.println(name.length());
+    }
+}
+
+@TableMapping("db-Student")
+class Student{
+    @FieldMapping(columnName = "db_id", type = "int", length = 10)
+    private int id;
+    @FieldMapping(columnName = "db_age", type = "int", length = 5)
+    private int age;
+    @FieldMapping(columnName = "db_name", type = "varchar", length = 50)
+    private String name;
+
+    public Student() {
+    }
+
+    public Student(int id, int age, String name) {
+        this.id = id;
+        this.age = age;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "student{" +
+                "id=" + id +
+                ", age=" + age +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+
+//类名的注解
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@interface TableMapping{
+    String value();
+}
+
+//属性的注解
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface FieldMapping{
+    String columnName();
+    String type();
+    int length();
+}
+```
