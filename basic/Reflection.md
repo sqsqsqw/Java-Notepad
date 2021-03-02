@@ -498,7 +498,7 @@ class Student extends Person {
 
 ```
 
-### 2.5.2 创建类的对象
+### 2.5.2 创建并调用类的对象
 
 ```java
 package com;
@@ -577,3 +577,65 @@ class Student extends Person {
     }
 }
 ```
+
+`Method`,`Field`和`Constructor`对象都有`setAccessible(boolean)`方法,这个方法作用是启动和禁用访问安全检查的开关，也可以用来提高反射的效率。
+
+## 2.6 反射操作泛型
+
+Java采用泛型擦除的机制来引入泛型，Java中的泛型仅仅时给编译器javac使用的，确保数据的安全性和免去强制类型转换问题，但是一旦编译完成，所有和泛型有关的类型全部擦除
+
+为了通过反射操作这些类型，Java新增了ParameterizedType， GenericArrayType， TypeVariable， WildcardType几种类型来代表不能被归一到Class类中类型但是又和原始类型齐名的类型。
+
+- ParameterizedType：表示一种参数化类型 比如Collection<String>
+- GenericArrayType：表示一种元素类型时参数化类型或者类型变量的数组类型
+- TypeVariable：是各种类型变量的公共父接口
+- WildcardType：代表一种通配符类型表达式
+
+```java
+package com;
+
+import java.lang.reflect.*;
+import java.util.List;
+import java.util.Map;
+
+public class Demo2 {
+    public static void main(String[] args) throws NoSuchMethodException {
+
+        //t01
+        Method method = Demo2.class.getMethod("t01", Map.class, List.class);
+
+        Type[] types = method.getGenericParameterTypes();
+
+        for (Type type : types) {
+            System.out.println(type);
+            if(type instanceof ParameterizedType){
+                Type[] b = ((ParameterizedType) type).getActualTypeArguments();
+                for (Type type1 : b) {
+                    System.out.println(type1);
+                }
+            }
+        }
+
+
+        //t02
+        method = Demo2.class.getMethod("t02");
+        Type genType = method.getGenericReturnType();
+        if(genType instanceof ParameterizedType){
+            Type[] b = ((ParameterizedType) genType).getActualTypeArguments();
+            for (Type type1 : b) {
+                System.out.println(type1);
+            }
+        }
+    }
+
+    public void t01(Map<String, Integer> map, List<Integer> list){
+
+    }
+    public Map<String, Integer> t02(){
+        System.out.println("test02");
+        return null;
+    }
+}
+```
+
+## 2.7 反射操作注解
