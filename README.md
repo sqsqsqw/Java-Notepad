@@ -8,8 +8,8 @@ __本笔记内的所有文章并非权威__
 
 [第一部分 基础](https://github.com/sqsqsqw/Java-Notepad/tree/master/basic)
 
-- [Java 多线程](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Thread.md)
-- [Java 反射](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Reflection.md)
+- [Java 多线程](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Thread.md) （完结）
+- [Java 反射](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Reflection.md) （完结）
 - [Impala SQL基础](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Impala.md)
 - [金融知识](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/FinanceBusiness.md)
 
