@@ -358,13 +358,217 @@ class Student extends Person {
 
 ```java
 
-public class Demo3 {
-    public static void main(String[] args) throws ClassNotFoundException {
-        Class c1 = Class.forName("com.User");
+package com;
 
-        sout(c1.getName());         //com.User
-        sout(c1.getSimpleName());   //User
+import java.lang.reflect.Field;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        try {
+            Class clazz = Class.forName("com.Student");
+            Field[] fs = clazz.getFields();     //获取本类以及其父类的所有public属性
+            for (Field f : fs) {
+                System.out.println(f);
+            }
+            System.out.println("====================");
+            fs = clazz.getDeclaredFields();     //只获取本类的所有属性
+            for (Field f : fs) {
+                System.out.println(f);
+            }
+
+            System.out.println(fs[0].get(new Student()));
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }
 
+
+class Person {
+    public static String name1 = "name1";
+    private static String name2 = "name2";
+    public String sex = "male";
+    private int age = 0;
+}
+
+class Student extends Person {
+    static String name3 = "name3333";
+    private String addr = "addr";
+    public String tel = "18800000000";
+}
+
+/*
+输出：
+public java.lang.String com.Student.tel
+public static java.lang.String com.Person.name1
+public java.lang.String com.Person.sex
+====================
+static java.lang.String com.Student.name3
+private java.lang.String com.Student.addr
+public java.lang.String com.Student.tel
+name3333
+*/
+
+```
+
+
+```java
+package com;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        try {
+            //获取全部方法
+            Class clazz = Class.forName("com.Student");
+            Method[] fs = clazz.getMethods();
+            for (Method f : fs) {
+                System.out.println(f);
+            }
+            System.out.println("====================================");
+            fs = clazz.getDeclaredMethods();
+            for (Method f : fs) {
+                System.out.println(f);
+            }
+
+            System.out.println("====================================");
+            //获取指定方法
+            Method m2 = clazz.getMethod("m2", null);
+            Method m6 = clazz.getMethod("m6", String.class);
+
+            System.out.println(m2);
+            System.out.println(m6);
+
+            //这一条因为找不到对应方法会抛出异常
+            //Method m1 = clazz.getMethod("m1", null);
+
+            System.out.println("====================================");
+            //获得全部构造器
+            Constructor[] constructors = clazz.getConstructors();
+            for (Constructor constructor : constructors) {
+                System.out.println(constructor);
+            }
+            System.out.println("====================================");
+            constructors = clazz.getDeclaredConstructors();
+            for (Constructor constructor : constructors) {
+                System.out.println(constructor);
+            }
+
+            //获得指定构造器
+
+            Constructor constructor = clazz.getConstructor(null);
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+class Person {
+    public Person() {
+        System.out.println("Person.Constructor");
+    }
+    private static void m1(){};
+    public static void m2(){};
+    private void m3(){};
+    public void m4(){};
+}
+
+class Student extends Person {
+    public Student() {
+        System.out.println("Student.Constructor");
+    }
+    private void m5(){};
+    public void m6(String s1){};
+}
+
+```
+
+### 2.5.2 创建类的对象
+
+```java
+package com;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+public class Demo2 {
+    public static void main(String[] args) {
+        try {
+            Class clazz = Class.forName("com.Student");
+
+            //clazz.newInstance()从Java9之后就不再推荐使用，而是改用以下方法
+            Student student = (Student)clazz.getDeclaredConstructor(null).newInstance();
+            System.out.println(student);
+            //传参构造函数
+            student = (Student)clazz
+                    .getDeclaredConstructor(String.class)
+                    .newInstance("Hashqi");
+            System.out.println(student);
+
+            // 获取并调用方法
+            Method getName = clazz.getDeclaredMethod("getName", null);
+            Method setName = clazz.getDeclaredMethod("setName", String.class);
+
+            System.out.println(getName.invoke(student));
+            setName.invoke(student, "Hashqi...");
+            System.out.println(getName.invoke(student));
+
+            
+
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+class Person {
+    public Person() {
+        System.out.println("Person.Constructor");
+    }
+}
+
+class Student extends Person {
+    public Student() {
+        System.out.println("Student.Constructor");
+    }
+    public Student(String name) {
+        this.name = name;
+        System.out.println("Student.Constructor");
+    }
+    public String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
 ```
