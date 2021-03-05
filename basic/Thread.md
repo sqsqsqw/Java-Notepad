@@ -804,3 +804,190 @@ public class Demo {
 ```
 
 在Callable方法中存在返回值的方法是 `submit()`, `execute()` 方法是没有返回值的。
+
+## 1.11 JUC工具
+
+`countDownLatch` 和 `CyclicBarrier`、`Semaphore`、`concurrentHashMap`、`BlockingQueue` 在java1.5一起被引入的JUC工具类。
+这几个工具大致是用作：
+
+- `CountDownLatch`: 这个类使一个线程等待其他线程各自执行完毕后再执行。
+- `CyclicBarrier`: 允许一组线程全部等待彼此达到共同屏障点的同步辅助。
+- `Semaphore`: 可以维护当前访问自身的线程个数，并提供了同步机制。
+- `ConcurrentHashMap`: ConcurrentHashMap 是一个二级哈希表。在一个总的哈希表下面，有若干个子哈希表。
+- `BlockingQueue`: 阻塞队列，它是一个队列，BlockingQueue提供了线程安全的队列访问方式
+
+### 1.11.1 CountDownLatch
+
+countDownLatch这个类使一个线程等待其他线程各自执行完毕后再执行。是通过一个计数器来实现的，计数器的初始值是线程的数量。每当一个线程执行完毕后，计数器的值就-1，当计数器的值为0时，表示所有线程都执行完毕，然后在闭锁上等待的线程就可以恢复工作了。
+
+```java
+//构造函数，参数count为计数值
+public CountDownLatch(int count) {  };  
+
+//调用await()方法的线程会被挂起，它会等待直到count值为0才继续执行
+public void await() throws InterruptedException { };   
+//和await()类似，只不过等待一定的时间后count值还没变为0的话就会继续执行
+public boolean await(long timeout, TimeUnit unit) throws InterruptedException { };  
+//将count值减1
+public void countDown() { };  
+```
+
+__Java示例__
+
+```java
+public class CountDownLatchTest {
+
+    public static void main(String[] args) {
+        final CountDownLatch latch = new CountDownLatch(2);
+        System.out.println("主线程开始执行…… ……");
+        //第一个子线程执行
+        ExecutorService es1 = Executors.newSingleThreadExecutor();
+        es1.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    System.out.println("子线程："+Thread.currentThread().getName()+"执行");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                latch.countDown();
+            }
+        });
+        es1.shutdown();
+
+        //第二个子线程执行
+        ExecutorService es2 = Executors.newSingleThreadExecutor();
+        es2.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("子线程："+Thread.currentThread().getName()+"执行");
+                latch.countDown();
+            }
+        });
+        es2.shutdown();
+        System.out.println("等待两个线程执行完毕…… ……");
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("两个子线程都执行完毕，继续执行主线程");
+    }
+}
+```
+
+### 1.11.2 CyclicBarrier
+
+CyclicBarrier字面意思是“可重复使用的栅栏”，CyclicBarrier 相比 CountDownLatch 来说，要简单很多，其源码没有什么高深的地方，它是 ReentrantLock 和 Condition 的组合使用。
+
+首先，CyclicBarrier 的源码实现和 CountDownLatch 大同小异，CountDownLatch 基于 AQS 的共享模式的使用，而 CyclicBarrier 基于 Condition 来实现的。因为 CyclicBarrier 的源码相对来说简单许多，读者只要熟悉了前面关于 Condition 的分析，那么这里的源码是毫无压力的，就是几个特殊概念罢了。
+ 
+在CyclicBarrier类的内部有一个计数器，每个线程在到达屏障点的时候都会调用await方法将自己阻塞，此时计数器会减1，当计数器减为0的时候所有因调用await方法而被阻塞的线程将被唤醒。
+
+```java
+int await() //等待所有 parties已经在这个障碍上调用了 await 。
+int await(long timeout, TimeUnit unit) //等待所有 parties已经在此屏障上调用 await ，或指定的等待时间过去。
+int getNumberWaiting() //返回目前正在等待障碍的各方的数量。
+int getParties() //返回旅行这个障碍所需的parties数量。
+boolean isBroken() //查询这个障碍是否处于破碎状态。
+void reset() //将屏障重置为初始状态。
+```
+
+__Java示例__
+
+```java
+class Horse implements Runnable {
+  
+  private static int counter = 0;
+  private final int id = counter++;
+  private int strides = 0;
+  private static Random rand = new Random(47);
+  private static CyclicBarrier barrier;
+  
+  public Horse(CyclicBarrier b) { barrier = b; }
+  
+  @Override
+  public void run() {
+    try {
+      while(!Thread.interrupted()) {
+        synchronized(this) {
+          //赛马每次随机跑几步
+          strides += rand.nextInt(3);
+        }
+        barrier.await();
+      }
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public String tracks() {
+    StringBuilder s = new StringBuilder();
+    for(int i = 0; i < getStrides(); i++) {
+      s.append("*");
+    }
+    s.append(id);
+    return s.toString();
+  }
+  
+  public synchronized int getStrides() { return strides; }
+  public String toString() { return "Horse " + id + " "; }
+  
+}
+ 
+public class HorseRace implements Runnable {
+  
+  private static final int FINISH_LINE = 75;
+  private static List<Horse> horses = new ArrayList<Horse>();
+  private static ExecutorService exec = Executors.newCachedThreadPool();
+  
+  @Override
+  public void run() {
+    StringBuilder s = new StringBuilder();
+    //打印赛道边界
+    for(int i = 0; i < FINISH_LINE; i++) {
+      s.append("=");
+    }
+    System.out.println(s);
+    //打印赛马轨迹
+    for(Horse horse : horses) {
+      System.out.println(horse.tracks());
+    }
+    //判断是否结束
+    for(Horse horse : horses) {
+      if(horse.getStrides() >= FINISH_LINE) {
+        System.out.println(horse + "won!");
+        exec.shutdownNow();
+        return;
+      }
+    }
+    //休息指定时间再到下一轮
+    try {
+      TimeUnit.MILLISECONDS.sleep(200);
+    } catch(InterruptedException e) {
+      System.out.println("barrier-action sleep interrupted");
+    }
+  }
+  
+  public static void main(String[] args) {
+    CyclicBarrier barrier = new CyclicBarrier(7, new HorseRace());
+    for(int i = 0; i < 7; i++) {
+      Horse horse = new Horse(barrier);
+      horses.add(horse);
+      exec.execute(horse);
+    }
+  }
+  
+}
+```
+
+### 1.11.3 Semaphore
+
+
+
