@@ -21,4 +21,6 @@ __本笔记内的所有文章并非权威__
 [第三部分 框架](https://github.com/sqsqsqw/Java-Notepad/tree/master/framework)
 - [Swagger](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/Swagger.md) （完结） 
 - [SpringBoot](https://github.com/sqsqsqw/Java-Notepad/tree/master/framework/SpringBoot) 
-    - [1.原理](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/1.md)
+    - [1.yarn](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/1.md)
+    - [2.自动装配原理](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/2.md)
+    - [3.数据校验及多环境切换](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/3.md)
