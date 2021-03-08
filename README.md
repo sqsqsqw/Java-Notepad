@@ -6,21 +6,22 @@ __本笔记内的所有文章并非权威__
 
 ### 目录
 
-[第一部分 基础](https://github.com/sqsqsqw/Java-Notepad/tree/master/basic)
+[第一部分 基础](https://gitee.com/Hashqi/Java-Notepad/basic)
 
-- [Java 多线程](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Thread.md) 
-- [Java 反射](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Reflection.md) 
-- [Impala SQL基础](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/Impala.md) 
-- [金融知识](https://github.com/sqsqsqw/Java-Notepad/blob/master/basic/FinanceBusiness.md)
+- [Java 多线程](https://gitee.com/Hashqi/Java-Notepad/basic/Thread.md) 
+- [Java 反射](https://gitee.com/Hashqi/Java-Notepad/basic/Reflection.md) 
+- [Impala SQL基础](https://gitee.com/Hashqi/Java-Notepad/basic/Impala.md) 
+- [金融知识](https://gitee.com/Hashqi/Java-Notepad/basic/FinanceBusiness.md)
 
-[第二部分 分布式大数据](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute)
+[第二部分 分布式大数据](https://gitee.com/Hashqi/Java-Notepad/distribute)
 
-- [CDH](https://github.com/sqsqsqw/Java-Notepad/tree/master/distribute/CDH) （可能弃用）
-    - [环境搭建](https://github.com/sqsqsqw/Java-Notepad/blob/master/distribute/CDH/build.md)
+- [CDH](https://gitee.com/Hashqi/Java-Notepad/distribute/CDH) （可能弃用）
+    - [环境搭建](https://gitee.com/Hashqi/Java-Notepad/distribute/CDH/build.md)
 
-[第三部分 框架](https://github.com/sqsqsqw/Java-Notepad/tree/master/framework)
-- [Swagger](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/Swagger.md) 
-- [SpringBoot](https://github.com/sqsqsqw/Java-Notepad/tree/master/framework/SpringBoot) 
-    - [1.yarn](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/1.md)
-    - [2.自动装配原理](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/2.md)
-    - [3.数据校验及多环境切换](https://github.com/sqsqsqw/Java-Notepad/blob/master/framework/SpringBoot/3.md)
+[第三部分 框架](https://gitee.com/Hashqi/Java-Notepad/master/framework)
+- [Swagger](https://gitee.com/Hashqi/Java-Notepad/framework/Swagger.md) 
+- [SpringBoot](https://gitee.com/Hashqi/Java-Notepad/framework/SpringBoot) 
+    - [1.yarn](https://gitee.com/Hashqi/Java-Notepad/framework/SpringBoot/1.md)
+    - [2.自动装配原理](https://gitee.com/Hashqi/Java-Notepad/framework/SpringBoot/2.md)
+    - [3.数据校验及多环境切换](https://gitee.com/Hashqi/Java-Notepad/framework/SpringBoot/3.md)
+    - [4.自动配置原理](https://gitee.com/Hashqi/Java-Notepad/framework/SpringBoot/4.md)
