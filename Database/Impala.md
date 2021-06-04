@@ -293,11 +293,55 @@ avg(field)                    -- 计算非空字段的平均数
 coalesce(ceil1, ceil2...)     -- 可传入任意数量的参数，返回第一个非空字段
 ```
 
-### 3.3.9 SQL格式
+### 3.3.9 Oracle获取ddl
+
+```SQL
+SELECT  dbms_metadata.get_ddl('TABLE','TABLE_NAME','USER')
+FROM dual; 
+```
+
+### 3.3.10 Oracle获取字段信息
+
+```SQL
+SELECT  *
+FROM all_tab_columns
+WHERE table_name = 'TABLE_NAME'; 
+```
+
+### 3.3.11 Oracle 查看与指定表的字段相符合的表
+
+```SQL
+-- 查看哪些表与TABLE_NAME表的字段相符合 
+SELECT  a.table_name 
+       ,a.match_cnt 
+       ,b.cnt
+FROM 
+(
+	SELECT  a.table_name 
+	       ,COUNT(1) AS match_cnt
+	FROM all_tab_columns a
+	WHERE column_name IN ( SELECT column_name FROM all_tab_columns WHERE table_name = 'TABLE_NAME') 
+	GROUP BY  table_name
+	HAVING COUNT(1) >= (
+	SELECT  COUNT(1)
+	FROM all_tab_columns
+	WHERE table_name = 'TABLE_NAME' )  
+) a
+LEFT JOIN 
+(
+	SELECT  table_name 
+	       ,COUNT(1) AS cnt
+	FROM all_tab_columns
+	GROUP BY  table_name 
+) b
+ON a.table_name = b.table_name;
+```
+
+## 3.4 SQL格式
 
 从《SQL进阶教程》- MICK 这本书中看的SQL格式风格确实简洁易懂，故概括自此书中的文章。
 
-#### 注释
+__注释__
 
 两种注释
 
@@ -317,7 +361,7 @@ SELECT col_1
  AND col_3 IN ( 'c', 'd' );
 ```
 
-#### 缩进
+__缩进__
 
 SQL 中 SELECT、FROM 等语句都有着明确的作用，请务必以这样的单位进行换行。笔者认为，比起所有关键字都顶格左齐的写法，让关键字右齐的写法更好。
 
@@ -336,7 +380,7 @@ SELECT col_1,
           col_3
 ```
 
-#### 空格
+__空格__
 
 不管用什么语言编程都一样，代码中需要适当地留一些空格。如果一点都不留，所有的代码都紧凑到一起，代码的逻辑单元就会不明确，也会给阅读的人带来额外负担。
 
@@ -353,7 +397,7 @@ SELECT col_1
    AND A.col_3=B.col_3;
 ```
 
-#### 大小写
+__大小写__
 
 在 SQL 里，关于应该如何区分使用大小写字母有着不成文的约定：关键字使用大写字母，列名和表名使用小写字母（也有一些人习惯只将单词的首字母大写 A）。很多图书也都是这样的。笔者经常看到有些人写出的 SQL 语句全部使用大写字母，或者全部使用小写字母，真心感觉不舒服。
 
@@ -369,7 +413,7 @@ SELECT  col_1, col_2, col_3,
  GROUP BY  col_1, col_2, col_3; 
 ```
 
-#### 逗号
+__逗号__
 
 这种“前置逗号”的写法有两个好处。第一个是删掉最后一列“col_4”后执行也不会出错。如果按照一般的写法来写，那么删掉最后的 col_4 后，SELECT 子句的结尾会变成“col_3,”，执行会出错。为了防止出错，还必须手动地删除逗号才行。当然，“前置逗号”的写法在需要删除第一列时也会有同样的问题，但是一般来说需要添加或删掉的大多是最后一列。写在第一位的列很多时候都是重要的列，相对而言不会有很大的变动。
 
